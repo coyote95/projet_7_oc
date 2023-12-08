@@ -34,6 +34,7 @@ def somme_combination(limite, combination):
     else:
         return None
 
+
 csv_file_name = "actions.csv"
 list_actions = open_csv_file(csv_file_name)
 print(list_actions)
@@ -41,29 +42,20 @@ target_cost = 500
 
 # Générer toutes les combinaisons possibles d'actions
 all_combinations = []
-result=[]
+result = []
 for r in range(1, len(list_actions) + 1):
     for combination in combinations(list_actions, r):
         somme = somme_combination(500, combination)
         if somme is not None:
             result.append(somme)
 
-    # all_combinations.extend(combinations(list_actions, r))
-
-# for combination in all_combinations:
-#     print(combination)
-
 print(len(all_combinations))
-
 
 # Filtrer les combinaisons dont la somme du coût est inférieure ou égale à 500
 valid_combinations = [comb for comb in all_combinations if sum(action['cout'] for action in comb) <= target_cost]
 
-
-
 result.sort(key=lambda x: x['total_benefice'], reverse=True)
 best_combination = result[0]
-
 
 print(f"\nla meilleur combinaison est: {best_combination['actions']}")
 print(f"Total cout: {best_combination['total_cout']} euros")

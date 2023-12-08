@@ -27,13 +27,13 @@ def generate_combinations(base_combination, remaining_actions, max_depth, result
         somme = somme_combination(limite, base_combination)
         if somme is not None:
             result.append(somme)
-
         return
     for action in remaining_actions:
         if len(base_combination) > 0 and action['actions'] <= base_combination[-1]['actions']:
             continue
-        new_remaining_actions = [a for a in remaining_actions if a != action]
-        generate_combinations(base_combination + [action], new_remaining_actions, max_depth, result, plafond)
+        # new_remaining_actions = [a for a in remaining_actions if a != action]
+        # print(new_remaining_actions)
+        generate_combinations(base_combination + [action], remaining_actions, max_depth, result, plafond)
 
 
 def somme_combination(limite, combination):
