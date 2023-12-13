@@ -52,12 +52,13 @@ all_combinaison_limit_profit = []
 plafond = 500
 
 csv_file_name = "actions.csv"
-list_actions = open_csv_file(csv_file_name)
-print(list_actions)
+list_dict_actions = open_csv_file(csv_file_name)
+print(list_dict_actions) #[{'actions': 'action-1', 'cout': 20, 'benefice': 0.05},...]
 
-for i in range(1, len(list_actions) + 1):
+
+for i in range(1, len(list_dict_actions) + 1):
     print(f"depth={i}")
-    generate_combinations([], list_actions, i, all_combinaisons, plafond)
+    generate_combinations([], list_dict_actions, i, all_combinaisons, plafond)
 
 
 all_combinaisons.sort(key=lambda x: x['total_benefice'], reverse=True)

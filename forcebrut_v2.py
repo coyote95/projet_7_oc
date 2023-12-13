@@ -22,7 +22,7 @@ def open_csv_file(file_name):
         return None
 
 
-csv_file_name = "actions.csv"
+csv_file_name = "actions2.csv"
 list_actions = open_csv_file(csv_file_name)
 print(list_actions)
 
@@ -33,6 +33,12 @@ actions_dict = {action['actions']: {'cout': action['cout'], 'benefice': action['
 
 
 def generate_combinations(actions, current_combination, remaining_actions, target_cost, result):
+
+    print("***********************************************")
+    # print(f"toutes les action:{actions}")
+    print(f"current-combinaison:{current_combination}")
+    print(f"reste combinaisons:{remaining_actions}")
+    print("**********************************************")
     current_cost = sum(actions[action]['cout'] for action in current_combination)
 
     if current_cost <= target_cost:
@@ -40,9 +46,22 @@ def generate_combinations(actions, current_combination, remaining_actions, targe
         dict_somme_combination = {'actions': current_combination, 'total_cout': current_cost,
                                   'total_benefice': total_benefice}
         result.append(dict_somme_combination)
+       # print(f"save:{dict_somme_combination}")
+
+    # Condition d'arrêt explicite
+    if not remaining_actions:
+        return
 
     for i, action in enumerate(remaining_actions):
-        generate_combinations(actions, current_combination + [action], remaining_actions[i + 1:], target_cost, result)
+        print(f'\nindicei: {i} action: {action} remaining: {remaining_actions}')
+        # print("\n**********DEBUT**********")
+        print(f"TEST currentcombinaison{current_combination}")
+        # print(f'BEFORE-------indice{i} et action:{action}-------')
+        # print(f"BEFORE------reste combinaisons:{remaining_actions}")
+        generate_combinations(actions, current_combination + [action], remaining_actions[i+1:], target_cost, result)
+        # print(f'AFTER-------indice{i} et action:{action}-------')
+        # print(f"AFTER------reste combinaisons:{remaining_actions}")
+        # print("\n**********FIN**********")
 
 
 # Générer les combinaisons
@@ -57,7 +76,6 @@ print(len(all_combinations))
 
 all_combinations.sort(key=lambda x: x['total_benefice'], reverse=True)
 best_combination = all_combinations[0]
-
 
 print(f"\nla meilleur combinaison est: {best_combination['actions']}")
 print(f"Total cout: {best_combination['total_cout']} euros")

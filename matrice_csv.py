@@ -1,25 +1,36 @@
-actions = {
-    "Action-1": {"cout": 20, "benefice": 0.05},
-    "Action-2": {"cout": 30, "benefice": 0.10},
-    "Action-3": {"cout": 50, "benefice": 0.15},
-    "Action-4": {"cout": 70, "benefice": 0.20},
-    "Action-5": {"cout": 60, "benefice": 0.17},
-    "Action-6": {"cout": 80, "benefice": 0.25},
-    "Action-7": {"cout": 22, "benefice": 0.07},
-    "Action-8": {"cout": 26, "benefice": 0.11},
-    "Action-9": {"cout": 48, "benefice": 0.13},
-    "Action-10": {"cout": 34, "benefice": 0.27},
-    "Action-11": {"cout": 42, "benefice": 0.17},
-    "Action-12": {"cout": 110, "benefice": 0.09},
-    "Action-13": {"cout": 38, "benefice": 0.23},
-    "Action-14": {"cout": 14, "benefice": 0.01},
-    "Action-15": {"cout": 18, "benefice": 0.03},
-    "Action-16": {"cout": 8, "benefice": 0.08},
-    "Action-17": {"cout": 4, "benefice": 0.12},
-    "Action-18": {"cout": 10, "benefice": 0.14},
-    "Action-19": {"cout": 24, "benefice": 0.21},
-    "Action-20": {"cout": 114, "benefice": 0.18},
-}
+import csv
+import time
+
+start = time.time()
+
+
+def open_csv_file(file_name):
+    try:
+        with open(file_name, 'r', newline='', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            csv_content = list(csv_reader)
+            csv_content = [{key.strip('\ufeff'): value.strip() for key, value in row.items()} for row in csv_content]
+            for row in csv_content:
+                row['cout'] = int(row['cout'])
+                row['benefice'] = float(row['benefice'].rstrip('%')) / 100
+        return csv_content
+    except FileNotFoundError:
+        print(f"The file {file_name} was not found.")
+        return None
+    except Exception as e:
+        print(f"An error occurred while opening the file: {e}")
+        return None
+
+
+csv_file_name = "actions.csv"
+list_actions = open_csv_file(csv_file_name)
+print(list_actions)
+
+target_cost = 500
+
+# Convertir list_actions en un dictionnaire pour accéder aux informations par le nom de l'action
+actions_dict = {action['actions']: {'cout': action['cout'], 'benefice': action['benefice']} for action in list_actions}
+print (actions_dict)
 
 budget_max = 500
 
@@ -53,9 +64,11 @@ def calculer_cout_benefice(combinaison, actions):
     return cout_total, benefice_total
 
 
-resultat = meilleur_combinaison(actions, budget_max)
-cout_total, benefice_total = calculer_cout_benefice(resultat, actions)
+resultat = meilleur_combinaison(actions_dict, budget_max)
+cout_total, benefice_total = calculer_cout_benefice(resultat, actions_dict)
 
 print("Meilleure combinaison d'actions :", resultat)
 print("Coût total :", cout_total, "euros")
 print("Bénéfice total :", benefice_total, "euros")
+
+
