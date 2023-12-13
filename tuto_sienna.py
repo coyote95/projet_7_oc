@@ -1,4 +1,3 @@
-
 import csv
 import time
 
@@ -12,8 +11,8 @@ def open_csv_file(file_name):
             csv_content = list(csv_reader)
             csv_content = [{key.strip('\ufeff'): value.strip() for key, value in row.items()} for row in csv_content]
             for row in csv_content:
-                row['price'] =int( float(row['price'])*100)
-                row['profit'] = float(row['profit'])
+                row['price'] = int(float(row['price']) * 100)
+                row['profit'] = (float(row['profit']) / 100)
         return csv_content
     except FileNotFoundError:
         print(f"The file {file_name} was not found.")
@@ -29,10 +28,12 @@ print(list_actions)
 #
 
 # Convert the 'actions'list of dictionary to a list of tuples
-actions_tuples = [(action['name'], action['price'], action['profit']) for action in list_actions]
-print(actions_tuples)
-
-
+actions_tuples = [(action['name'], action['price'], action['profit'] * action['price']) for action in list_actions]
+i = 0
+for action in actions_tuples:
+    i += 1
+    if 500 < i < 600:
+        print(f"i:{i}-{action}")
 
 
 # Solution optimale - programmation dynamique
@@ -48,7 +49,7 @@ def sacADos_dynamique(capacite, elements):
     print(f"Number of columns: {num_columns}")
 
     for i in range(1, len(elements) + 1):
-        print(i)
+        print(f"i:{i}")
         for w in range(1, capacite + 1):
             if elements[i - 1][1] <= w:
                 matrice[i][w] = max(elements[i - 1][2] + matrice[i - 1][w - elements[i - 1][1]], matrice[i - 1][w])
