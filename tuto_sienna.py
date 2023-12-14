@@ -22,18 +22,23 @@ def open_csv_file(file_name):
         return None
 
 
-csv_file_name = "dataset1_Python+P7.csv"
+csv_file_name = "dataset2_Python+P7.csv"
 list_actions = open_csv_file(csv_file_name)
 print(list_actions)
+
+list_actions_clean = [action for action in list_actions if action['price'] > 0]
+
+
+
+print(list_actions_clean)
+print(len(list_actions_clean))
 #
 
 # Convert the 'actions'list of dictionary to a list of tuples
-actions_tuples = [(action['name'], action['price'], action['profit'] * action['price']) for action in list_actions]
+actions_tuples = [(action['name'], action['price'], action['profit'] * action['price']) for action in list_actions_clean]
 i = 0
-for action in actions_tuples:
-    i += 1
-    if 500 < i < 600:
-        print(f"i:{i}-{action}")
+print(actions_tuples)
+print(len(actions_tuples))
 
 
 # Solution optimale - programmation dynamique
@@ -49,27 +54,33 @@ def sacADos_dynamique(capacite, elements):
     print(f"Number of columns: {num_columns}")
 
     for i in range(1, len(elements) + 1):
-        print(f"i:{i}")
-        for w in range(1, capacite + 1):
-            if elements[i - 1][1] <= w:
-                matrice[i][w] = max(elements[i - 1][2] + matrice[i - 1][w - elements[i - 1][1]], matrice[i - 1][w])
+        for j in range(1, capacite + 1):
+            if elements[i - 1][1] <= j:
+                matrice[i][j] = max(elements[i - 1][2] + matrice[i - 1][j - elements[i - 1][1]], matrice[i - 1][j])
             else:
-                matrice[i][w] = matrice[i - 1][w]
+                matrice[i][j] = matrice[i - 1][j]
 
     # Retrouver les éléments en fonction de la somme
-    w = capacite
-    n = len(elements)
+    j = capacite
+    i = len(elements)
     elements_selection = []
 
-    while w >= 0 and n >= 0:
-        e = elements[n - 1]
-        if matrice[n][w] == matrice[n - 1][w - e[1]] + e[2]:
+    while j > 0 and i > 0:
+        e = elements[i - 1]
+        if matrice[i][j] == matrice[i - 1][j - e[1]] + e[2]:
             elements_selection.append(e)
-            w -= e[1]
+            j -= e[1]
 
-        n -= 1
+        i -= 1
 
     return matrice[-1][-1], elements_selection
 
 
-print('Algo dynamique', sacADos_dynamique(50000, actions_tuples))
+benefice, actions = sacADos_dynamique(50000, actions_tuples)
+print('Algo dynamique', benefice, actions)
+print(len(actions))
+
+total_price = sum(action[1] for action in actions)/100
+print("Total Price:", total_price)
+
+
